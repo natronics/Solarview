@@ -6,18 +6,19 @@ from math import cos
 
 class planet(object):
   
-  def __init__(self, eph, a, year, radius, color):
-    self.eph    = eph
-    self.a      = a
-    self.year   = year
-    self.radius = radius
-    self.color  = color
+  def __init__(self, eph, a, year, radius, color, color_rgb):
+    self.eph        = eph
+    self.a          = a
+    self.year       = year
+    self.radius     = radius
+    self.color      = color
+    self.color_rgb  = color_rgb
     
-planets = [   planet(ephem.Mercury() , 0.466,   87.969,  0.3829, "#c8c8c8")
-            , planet(ephem.Venus()   , 0.728,  224.700,  0.949 , "#f2dcb4")
-            , planet(ephem.Sun()     , 1    ,  365.245,  1     , "#55a8de")
-            , planet(ephem.Mars()    , 1.665,  686.971,  0.533 , "#d4624a")
-            , planet(ephem.Jupiter() , 5.458, 4332.59 , 11.21  , "#f2dcb4")
+planets = [   planet(ephem.Mercury() , 0.466,   87.969,  0.3829, "#c8c8c8", (0.784,0.784,0.784))
+            , planet(ephem.Venus()   , 0.728,  224.700,  0.949 , "#f2dcb4", (0.949,0.863,0.706))
+            , planet(ephem.Sun()     , 1    ,  365.245,  1     , "#55a8de", (0.333,0.659,0.871))
+            , planet(ephem.Mars()    , 1.665,  686.971,  0.533 , "#d4624a", (0.831,0.384,0.290))
+            , planet(ephem.Jupiter() , 5.458, 4332.59 , 11.21  , "#f2dcb4", (0.949,0.863,0.706))
           ]
 
 def sphere2xyz(r, p, t):

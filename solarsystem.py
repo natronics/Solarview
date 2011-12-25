@@ -31,32 +31,67 @@ class spacecraft(object):
   
   def __init__(self):
     self.data   = json.loads(open(config.datafile, 'r').read())
+  
+  def get_closest(self, craft, t):
+    t = (t - self.origin)
+    t = int((t.days*86400) + t.seconds)
     
-  def get_location(self, craft, dt):
+    i = 0
+    m = 1e18
+    m_i = 0
+    for o in self.data[craft]["orbit"]:
+      time = o["dt"]
+      d = time - t
+      if d < m and d >= 0:
+        m   = d
+        m_i = i
+      i+=1
+        
+    return m_i
     
-    now = (dt - self.origin)
+  def get_location(self, craft, t):
+    
+    now = (t - self.origin)
     now = int((now.days*86400) + now.seconds)
     
     spacecraft = self.data[craft]
     
-    start = self.origin + datetime.timedelta(seconds=spacecraft["start"])
+    m_i = self.get_closest(craft, t)
     
-    i = 0
-    m = 1e15
-    m_i = 0
-    for o in spacecraft["orbit"]:
-      time = o["dt"]
-      d = fabs(time - now)
-      if d < m: 
-        m   = d
-        m_i = i
-      
-      #print o["dt"], i
-      i+=1
+    ut_0    = spacecraft["orbit"][m_i-1]["dt"]
+    ut_1    = spacecraft["orbit"][m_i  ]["dt"]
+    point_0 = spacecraft["orbit"][m_i-1]["point"]
+    point_1 = spacecraft["orbit"][m_i  ]["point"]
     
-    print m_i, spacecraft["orbit"][m_i]
+    interp = (now - ut_0)/float(ut_1 - ut_0)
     
-    return 1.1, 0.2
+    point_t = []
+    for i in range(3):
+      movement = point_1[i] - point_0[i]
+      p = interp*movement + point_0[i]
+      point_t.append(p)
+      #print i, movement, p
+    
+    return point_t
+
+  def get_past_orbit(self, craft, t):
+    now = (t - self.origin)
+    now = int((now.days*86400) + now.seconds)
+    spacecraft = self.data[craft]
+    m_i = self.get_closest(craft, t)
+    
+    orbit = []
+    
+    for o in spacecraft["orbit"][0:m_i]:
+      orbit.append(o["point"])
+    
+    last = self.get_location(craft, t)
+    
+    orbit.append(last)
+    
+    return orbit
+    
+    
   
 def sphere2xyz(r, p, t):
   t = t-pi

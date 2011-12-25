@@ -9,17 +9,16 @@ now = datetime.datetime.utcnow()
 
 
 p = solarsystem.position(ephem.Sun(), now)
-png = drawing.DrawPNG(1280,720, 5, center=(p[0],p[1]))
+png = drawing.DrawPNG(720,720, 1.8, center=(0,0))
 
-png.draw_solarsystem(now, orbit_stroke=1.2, planet_scaler=1.5, planet_min=2, planet_max=7)
-
-
-#png.draw_line(orbit_past, 1, (0.6,0.6,0.6))
+png.draw_solarsystem(now, orbit_stroke=1.2, planet_scaler=2, planet_min=1.4, planet_max=7)
 
 spacecraft = solarsystem.spacecraft()
 
-msl = spacecraft.get_location("msl", now)
-
-png.draw_object(msl, 3, (0.9,0.9,0.9), 1)
+for craft in spacecraft.crafts:
+  orbit_past = spacecraft.get_past_orbit(craft, now)
+  png.draw_line(orbit_past, 1, (0.6,0.6,0.6))  
+  scraft = spacecraft.get_location(craft, now)
+  png.draw_object(scraft, 1, (0.95,0.95,0.95), 1)
 
 png.write("solarsystemnow.png")

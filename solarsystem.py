@@ -1,5 +1,8 @@
 import ephem
 import datetime
+import config
+import json
+from math import fabs
 from math import pi
 from math import sin
 from math import cos
@@ -21,6 +24,40 @@ planets = [   planet(ephem.Mercury() , 0.466,   87.969,  0.3829, "#c8c8c8", (0.7
             , planet(ephem.Jupiter() , 5.458, 4332.59 , 11.21  , "#f2dcb4", (0.949,0.863,0.706))
           ]
 
+class spacecraft(object):
+  
+  crafts = ["msl"]
+  origin = datetime.datetime(1970,1,1,0,0,0)
+  
+  def __init__(self):
+    self.data   = json.loads(open(config.datafile, 'r').read())
+    
+  def get_location(self, craft, dt):
+    
+    now = (dt - self.origin)
+    now = int((now.days*86400) + now.seconds)
+    
+    spacecraft = self.data[craft]
+    
+    start = self.origin + datetime.timedelta(seconds=spacecraft["start"])
+    
+    i = 0
+    m = 1e15
+    m_i = 0
+    for o in spacecraft["orbit"]:
+      time = o["dt"]
+      d = fabs(time - now)
+      if d < m: 
+        m   = d
+        m_i = i
+      
+      #print o["dt"], i
+      i+=1
+    
+    print m_i, spacecraft["orbit"][m_i]
+    
+    return 1.1, 0.2
+  
 def sphere2xyz(r, p, t):
   t = t-pi
   x = r * sin(p) * cos(t)

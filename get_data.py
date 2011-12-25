@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 import json
 import datetime
-import horizons
-import os 
+from data import horizons
+import config
 
 origin = datetime.datetime(1970,1,1,0,0,0)
-
-datafile = os.path.abspath("spacecraft.json")
 
 data = {}
 
@@ -23,8 +21,8 @@ start_u = int((start_u.days * 86400) + start_u.seconds)
 end_u = end - origin
 end_u = int((end_u.days * 86400) + end_u.seconds)
 
-data["msl"] = {"orbit": msl, "start": start_u}
+data["msl"] = {"orbit": msl, "start": start_u, "end": end_u}
 
-f_out = open(datafile,'w')
+f_out = open(config.datafile,'w')
 f_out.write(json.dumps(data))
 f_out.close()

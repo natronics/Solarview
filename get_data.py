@@ -3,25 +3,31 @@ import json
 import datetime
 from data import horizons
 import config
+import time
 
 origin = datetime.datetime(1970,1,1,0,0,0)
 
 data = {}
 
-h = horizons.Horizons()
+def get_spacecrat_data(key, craft):
+  h = horizons.Horizons()
 
-start = datetime.datetime(2011,11,26,16,0,0)
-#end   = datetime.datetime(2011,11,30,16,0,0)
-end   = datetime.datetime(2012, 8, 5, 0,0,0)
+  start = origin + datetime.timedelta(seconds=craft["start"])
+  end   = origin + datetime.timedelta(seconds=craft["end"])
 
-msl = h.get_track('-76', start, end)
+  print "Getting data for", key
+  
+  orbit_data = h.get_track(craft["code"], start, end)
 
-start_u = start - origin
-start_u = int((start_u.days * 86400) + start_u.seconds)
-end_u = end - origin
-end_u = int((end_u.days * 86400) + end_u.seconds)
+  print "Got data for", key
+  
+  time.sleep(5)
+  
+  data[key] = {"orbit": orbit_data}
 
-data["msl"] = {"orbit": msl, "start": start_u, "end": end_u}
+for key in config.spacecraft:
+  #print config.spacecraft[key]
+  get_spacecrat_data(key, config.spacecraft[key])
 
 f_out = open(config.datafile,'w')
 f_out.write(json.dumps(data))

@@ -26,7 +26,6 @@ planets = [   planet(ephem.Mercury() , 0.466,   87.969,  0.3829, "#c8c8c8", (0.7
 
 class spacecraft(object):
   
-  crafts = ["msl"]
   origin = datetime.datetime(1970,1,1,0,0,0)
   
   def __init__(self):

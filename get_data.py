@@ -19,16 +19,16 @@ def get_spacecrat_data(key, craft):
   
   orbit_data = h.get_track(craft["code"], start, end)
 
-  print "Got data for", key
-  
   time.sleep(5)
   
   data[key] = {"orbit": orbit_data}
+  
+  f_out = open("data/" + key + ".json",'w')
+  f_out.write(json.dumps(data))
+  f_out.close()
+  
+  print "Got data for", key
 
 for key in config.spacecraft:
   #print config.spacecraft[key]
   get_spacecrat_data(key, config.spacecraft[key])
-
-f_out = open(config.datafile,'w')
-f_out.write(json.dumps(data))
-f_out.close()

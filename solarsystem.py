@@ -29,7 +29,8 @@ class spacecraft(object):
   origin = datetime.datetime(1970,1,1,0,0,0)
   
   def __init__(self):
-    self.data   = json.loads(open(config.datafile, 'r').read())
+    #self.data   = json.loads(open(config.datafile, 'r').read())
+    self.data = []
   
   def get_closest(self, craft, t):
     t = (t - self.origin)
@@ -38,7 +39,9 @@ class spacecraft(object):
     i = 0
     m = 1e18
     m_i = 0
-    for o in self.data[craft]["orbit"]:
+    
+    data   = json.loads(open("data/" + craft + ".json", 'r').read())
+    for o in data[craft]["orbit"]:
       time = o["dt"]
       d = time - t
       if d < m and d >= 0:
@@ -53,7 +56,8 @@ class spacecraft(object):
     now = (t - self.origin)
     now = int((now.days*86400) + now.seconds)
     
-    spacecraft = self.data[craft]
+    data   = json.loads(open("data/" + craft + ".json", 'r').read())
+    spacecraft = data[craft]
     
     m_i = self.get_closest(craft, t)
     
@@ -76,7 +80,9 @@ class spacecraft(object):
   def get_past_orbit(self, craft, t):
     now = (t - self.origin)
     now = int((now.days*86400) + now.seconds)
-    spacecraft = self.data[craft]
+    
+    data   = json.loads(open("data/" + craft + ".json", 'r').read())
+    spacecraft = data[craft]
     m_i = self.get_closest(craft, t)
     
     orbit = []

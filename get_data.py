@@ -4,12 +4,14 @@ import datetime
 from data import horizons
 import config
 import time
+import sys
 
 origin = datetime.datetime(1970,1,1,0,0,0)
 
-data = {}
-
 def get_spacecrat_data(key, craft):
+
+  data = {}
+  
   h = horizons.Horizons()
 
   start = origin + datetime.timedelta(seconds=craft["start"])
@@ -29,6 +31,15 @@ def get_spacecrat_data(key, craft):
   
   print "Got data for", key
 
-for key in config.spacecraft:
-  #print config.spacecraft[key]
+def get_all():
+  for key in config.spacecraft:
+    get_spacecrat_data(key, config.spacecraft[key])
+
+def get_spacecraft(key):
   get_spacecrat_data(key, config.spacecraft[key])
+
+
+if len(sys.argv) > 0:
+  get_spacecraft(sys.argv[1])
+else:
+  get_all()

@@ -10,7 +10,7 @@ now = datetime.datetime.utcnow()
 
 
 p = solarsystem.position(ephem.Sun(), now)
-png = drawing.DrawPNG(720,720, 1.8, center=(0,0))
+png = drawing.DrawPNG(720,720, 1.95, center=(0,0))
 
 png.draw_solarsystem(now, orbit_stroke=1.4, planet_scaler=3, planet_min=1.5, planet_max=7)
 
@@ -23,5 +23,9 @@ for craft in config.spacecraft:
   scraft = spacecraft.get_location(craft, now)
   png.draw_object(scraft, 1, (0.95,0.95,0.95), 1)
   png.draw_text(scraft, config.spacecraft[craft]["label"], (0.95,0.95,0.95), 9, label_offset=5)
+  
+
+timestamp = now.strftime("%A %B %d, %Y  %H:%M UTC")
+png.draw_text([7,720], timestamp, (0.5,0.5,0.5), 11, screen=True)
 
 png.write("solarsystemnow.png")

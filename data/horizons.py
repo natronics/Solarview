@@ -37,6 +37,7 @@ class Horizons(object):
               , ('[ 1-6, ?  ] :',           '1\n')]                 # Ouput table type?
   
     telnet = telnetlib.Telnet(self.HOST, self.PORT)
+    #telnet.set_debuglevel(1)
     
     print 'Waiting for Horizons...'
     

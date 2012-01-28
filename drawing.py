@@ -106,16 +106,20 @@ class DrawPNG(object):
         
   def draw_text(self, pos, text, c, size, screen=False, label_offset=10):
     
-    (x,y) = self.HAE2Screen(pos[0], pos[1])
-    
     self.cr.set_source_rgb(c[0], c[1], c[2])
     self.cr.select_font_face("Helvetica CE", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
     self.cr.set_font_size(size)
+    
+    if screen:
+      x = pos[0]
+      y = pos[1]
+    else:
+      (x,y) = self.HAE2Screen(pos[0], pos[1])
+    
     #x_bearing, y_bearing, width, height = self.cr.text_extents("a")[:4]
     self.cr.move_to(x + label_offset, y - label_offset)
     self.cr.show_text(text)
-    
-  
+
   def write(self, filename):
     self.surface.write_to_png(filename)
 
